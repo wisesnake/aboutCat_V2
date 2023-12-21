@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration 	PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+  <typeAliases>
+    <!-- <typeAlias type="각자 기능 구현에 쓴 VO 패키지경로" alias="뭐시기VO" /> -->
+    <!-- 우리 계획대로라면 한 파일을 여러명이 작업 후 merge할 일이 없겠지만 이 파일이 제일 단순하면서도 merge 가 필요하니까 이 파일로 연습하면 될듯 -->
+        <typeAlias type="com.aboutcat.goods.vo.GoodsVO" alias="goodsVO" />
+        <typeAlias type="com.aboutcat.member.vo.MemberVO" alias="memberVO" />
+         <typeAlias type="com.aboutcat.goods.vo.ImageFileVO" alias="imageFileVO" />
+         <typeAlias type="com.aboutcat.cart.vo.CartVO" alias="CartVO" />
+         <typeAlias type="com.aboutcat.order.vo.OrderVO" alias="OrderVO" />
+      </typeAliases>
+</configuration>
+
+
+

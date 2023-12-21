@@ -1,0 +1,55 @@
+.popup-container {
+  display: none;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  padding: 30px;
+  border-radius: 8px;
+  text-align: center;
+  font-family: Arial, sans-serif;
+  border: 1px solid #333; /* 테두리 스타일 */
+}
+
+.popup {
+  margin-bottom: 20px;
+}
+
+.popName {
+  font-weight: bold;
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.popContent {
+  margin-bottom: 20px;
+}
+
+.popContent p {
+  margin: 0;
+}
+
+.popContent p:not(:last-child) {
+  margin-bottom: 10px;
+}
+
+.popup label {
+  display: block;
+  margin-bottom: 10px;
+}
+
+.popup button {
+  background-color: #333;
+  color: white;
+  border: none;
+  padding: 8px 20px;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: background-color 0.3s ease;
+  font-size: 14px;
+}
+.popup button:hover {
+  background-color: #555;
+}

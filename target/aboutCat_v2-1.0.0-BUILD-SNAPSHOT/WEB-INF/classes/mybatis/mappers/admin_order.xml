@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="mapper.admin.order">
+	<!-- 리절트 맵 정의 -->
+	<resultMap id="orderResult" type="orderVO">
+		<result property="order_id" column="order_id" />
+		<result property="member_id" column="member_id" />
+		<result property="goods_id" column="goods_id" />
+		<result property="goods_name" column="goods_name" />
+		<result property="goods_sell_price" column="goods_sell_price" />
+		<result property="final_total_price" column="final_total_price" />
+		<result property="order_goods_qty" column="order_goods_qty" />
+
+		<result property="orderer_name" column="orderer_name" />
+		<result property="receiver_name" column="receiver_name" />
+		<result property="receiver_phone" column="receiver_phone" />
+
+		<result property="delivery_address" column="delivery_address" />
+		<result property="delivery_message" column="delivery_message" />
+
+		<result property="delivery_method" column="delivery_method" />
+		<result property="gift_wrapping" column="gift_wrapping" />
+		<result property="pay_method" column="pay_method" />
+		<result property="card_com_name" column="card_com_name" />
+		<result property="card_pay_month" column="card_pay_month" />
+
+		<result property="pay_orderer_phone_num" column="pay_orderer_phone_num" />
+		<result property="pay_order_time" column="pay_order_time" />
+		<result property="delivery_state" column="delivery_state" />
+		<result property="final_total_price" column="final_total_price" />
+		<result property="goods_qty" column="goods_qty" />
+
+		<result property="goods_image_fileName" column="goods_image_fileName" />
+	</resultMap>
+
+	<resultMap type="memberVO" id="memberResult">
+		<result property="member_id" column="member_id" />
+		<result property="member_pw" column="member_pw" />
+		<result property="member_name" column="member_name" />
+		<result property="member_gender" column="member_gender" />
+		<result property="phone" column="phone" />
+		<result property="sms_valid_check" column="sms_valid_check" />
+		<result property="member_email1" column="member_email1" />
+		<result property="member_email2" column="member_email2" />
+		<result property="email_valid_check" column="email_valid_check" />
+		<result property="postcode" column="postcode" />
+		<result property="address1_new" column="address1_new" />
+		<result property="address1_old" column="address1_old" />
+		<result property="address2" column="address2" />
+		<result property="birth_year" column="birth_year" />
+		<result property="birth_month" column="birth_month" />
+		<result property="birth_day" column="birth_day" />
+		<result property="birth_day_yinyang" column="birth_day_yinyang" />
+		<result property="member_add_date" column="member_add_date" />
+		<result property="member_deleted" column="member_deleted" />
+	</resultMap>
+
+
+
+	<select id="selectNewOrderList" resultMap="orderResult" parameterType="java.util.HashMap">
+		select * from (
+		select rowNum as recNum,t.*
+		from (
+		select * from cat_order_tbl
+		where to_char(pay_order_time,'yyyy-mm-dd') between #{beginDate} and #{endDate}
+		<if test="search_type=='orderer_id'">
+			AND member_id=#{search_word}
+		</if>
+		<if test="search_type=='orderer_name'">
+			AND orderer_name=#{search_word}
+		</if>
+		<if test="search_type=='orderer_phone'">
+			AND orderer_phone=#{search_word}
+		</if>
+		<if test="search_type=='order_goods_name'">
+			AND goods_name=#{search_word}
+		</if>
+		order by pay_order_time desc
+		) t
+		)
+		where
+		recNum between (#{section}-1)*100+ (#{pageNum}-1)*10+1 and (#{section}-1)*100+(#{pageNum})*10
+	</select>
+
+	<update id="changeDeliveryState" parameterType="java.util.HashMap">
+		update cat_order_tbl
+		set delivery_state = #{delivery_state}
+		where order_id = #{order_id}
+	</update>
+
+	<select id="selectOrderDetail" resultMap="orderResult" parameterType="int">
+		select * from cat_order_tbl
+		where order_id = #{order_id}
+	</select>
+	
+	<select id="selectOrdererInfo" resultMap="memberResult" parameterType="String">
+		select * from cat_member_tbl
+		where member_id = #{member_id}
+	</select>
+	
+	
+
+</mapper>

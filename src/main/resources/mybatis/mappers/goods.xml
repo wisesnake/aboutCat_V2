@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="mapper.goods">
+	<resultMap type="goodsVO" id="goodsResult">
+
+		<result property="goods_id" column="goods_id" />
+		<result property="goods_name" column="goods_name" />
+		<result property="goods_brand" column="goods_brand" />
+		<result property="goods_price" column="goods_price" />
+		<result property="goods_sell_price" column="goods_sell_price" />
+		<result property="stock" column="gods_stock" />
+		<result property="delivery_charge" column="delivery_charge" />
+		<result property="goods_description" column="goods_description" />
+		<result property="goods_status" column="goods_status" />
+		<result property="goods_keyword" column="goods_keyword" />
+		<result property="goods_image_fileName"
+			column="goods_image_fileName" />
+
+	</resultMap>
+
+	<resultMap id="imageResult" type="ImageFileVO">
+		<result property="goods_id" column="goods_id" />
+		<result property="goods_image_fileName"
+			column="goods_image_fileName" />
+		<result property="goods_image_writerid"
+			column="goods_image_writerid" />
+		<result property="goods_image_id" column="goods_image_id" />
+		<result property="goods_image_type" column="goods_image_type" />
+	</resultMap>
+
+
+	<select id="selectGoodsDetail" parameterType="String"
+		resultMap="goodsResult">
+	<![CDATA[
+	select g.* , i.goods_image_filename
+	from cat_goods_tbl g, cat_goods_image_tbl i
+	where g.goods_id=i.goods_id
+	and i.goods_image_type='main_image'
+	and g.goods_id=#{goods_id}
+	ORDER BY g.goods_id
+	]]>
+	</select>
+
+
+	<select id="selectGoodsList" parameterType="String"
+		resultMap="goodsResult">
+        <![CDATA[
+         select t.*
+          from(
+			select g.*, i.goods_image_filename
+			from cat_goods_tbl g, cat_goods_image_tbl i
+        	where g.goods_id=i.goods_id
+        	and i.goods_image_type='main_image'
+        	and goods_status=#{goodsStatus}) t
+	             where   rowNum <16
+	    ]]>
+	</select>
+
+	<select id="selectGoodsDetailImage" resultMap="imageResult"
+		parameterType="String">
+	    <![CDATA[
+		    	select * from  cat_goods_image_tbl
+		    	where  goods_image_type!='main_image'
+				and goods_id=#{goods_id}
+    	]]>
+	</select>
+
+	<select id="selectGoodsBySearchWord" resultMap="goodsResult"
+		parameterType="String">
+     <![CDATA[
+				select g.*,i.goods_image_fileName
+				from cat_goods_tbl g, cat_goods_image_tbl i
+		    where g.goods_id=i.goods_id
+		    and i.goods_image_type='main_image'
+		    and g.goods_name like '%'|| #{searchWord} || '%'
+		]]>
+	</select>
+
+	<select id="selectKeyword" parameterType="String"
+		resultMap="goodsResult">
+	    <![CDATA[
+	            select * from 
+                cat_goods_tbl g, cat_goods_image_tbl i
+                where g.goods_id= i.goods_id
+                and i.goods_image_type='main_image'
+                and goods_keyword= #{keyword}
+    	]]>
+	</select>
+
+
+	<select id="KeywordCount"
+		resultType="int">
+	    <![CDATA[
+	            select COUNT(*) from 
+                cat_goods_tbl g, cat_goods_image_tbl i
+                where g.goods_id= i.goods_id
+                and i.goods_image_type='main_image'
+                and goods_keyword= #{keyword}
+    	]]>
+	</select>
+
+	<select id="selectKeywordSearch" parameterType="String"
+		resultMap="goodsResult">
+	    <![CDATA[
+    	select goods_name
+    	from cat_goods_tbl
+    	where
+    	goods_name like '%'||#{keyword}||'%'
+    	]]>
+	</select>
+
+
+</mapper>

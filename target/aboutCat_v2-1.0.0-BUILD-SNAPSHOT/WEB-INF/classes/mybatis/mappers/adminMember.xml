@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="mapper.admin.member">
+	<resultMap type="memberVO" id="memberResult">
+		<result property="member_id" column="member_id" />
+		<result property="member_pw" column="member_pw" />
+		<result property="member_name" column="member_name" />
+		<result property="member_gender" column="member_gender" />
+		<result property="phone" column="phone" />
+		<result property="sms_valid_check" column="sms_valid_check" />
+		<result property="member_member_email1" column="member_member_email1" />
+		<result property="member_member_email2" column="member_member_email2" />
+		<result property="email_valid_check" column="email_valid_check" />
+		<result property="postcode" column="postcode" />
+		<result property="address1_new" column="address1_new" />
+		<result property="address1_old" column="address1_old" />
+		<result property="address2" column="address2" />
+		<result property="birth_year" column="birth_year" />
+		<result property="birth_month" column="birth_month" />
+		<result property="birth_day" column="birth_day" />
+		<result property="birth_day_yinyang" column="birth_day_yinyang" />
+		<result property="member_add_date" column="member_add_date" />
+		<result property="member_deleted" column="member_deleted" />
+	</resultMap>
+
+
+
+	<select id="searchMembersList" resultMap="memberResult" parameterType="java.util.HashMap">
+		select * from (
+		select rowNum as recNum,t.*
+		from (
+		select * from cat_member_tbl
+		where to_char(member_add_date,'yyyy-mm-dd') between #{beginDate} and #{endDate}
+		<if test="search_type=='member_id'">
+			AND member_id=#{search_word}
+		</if>
+		<if test="search_type=='member_name'">
+			AND member_name=#{search_word}
+		</if>
+		<if test="search_type=='phone'">
+			AND phone=#{search_word}
+		</if>
+		order by member_add_date desc
+		) t
+		)
+		where
+		recNum between (#{section}-1)*100+ (#{pageNum}-1)*10+1 and (#{section}-1)*100+(#{pageNum})*10
+
+	</select>
+
+	<select id="memberDetail" resultMap="memberResult" parameterType="String">
+	    <![CDATA[
+		    select * from cat_member_tbl
+            where member_id=#{member_id}
+    	]]>
+	</select>
+
+	<update id="modifyMemberInfo" parameterType="java.util.HashMap">
+		update cat_member_tbl
+		<set>
+			<if test=" member_pw!='' and member_pw!=null">
+				member_pw=#{member_pw},
+			</if>
+			<if test=" member_gender!='' and member_gender!=null">
+				member_gender=#{member_gender},
+			</if>
+			<if test=" birth_year!='' and birth_year!=null">
+				birth_year=#{birth_year},
+			</if>
+			<if test=" birth_month!='' and birth_month!=null">
+				birth_month=#{birth_month},
+			</if>
+			<if test=" birth_day!='' and birth_day!=null">
+				birth_day=#{birth_day},
+			</if>
+			<if test=" phone!='' and phone!=null">
+				phone=#{phone},
+			</if>
+			<if test=" sms_valid_check!='' and sms_valid_check!=null">
+				<if test="sms_valid_check=='true'">
+					sms_valid_check=1,
+				</if>
+				<if test="sms_valid_check=='false'">
+					sms_valid_check=0,
+				</if>
+			</if>
+			<if test=" member_email1!='' and member_email1!=null">
+				member_email1=#{member_email1},
+			</if>
+			<if test=" member_email2!='' and member_email2!=null">
+				member_email2=#{member_email2},
+			</if>
+			<if test=" email_valid_check!='' and email_valid_check!=null">
+				<if test="email_valid_check=='true'">
+					email_valid_check=1,
+				</if>
+				<if test="email_valid_check=='false'">
+					email_valid_check=0,
+				</if>
+			</if>
+			<if test=" postcode!='' and postcode!=null">
+				postcode=#{postcode},
+			</if>
+			<if test=" address1_new!='' and address1_new!=null">
+				address1_new=#{address1_new},
+			</if>
+			<if test=" address1_old!='' and address1_old!=null">
+				address1_old=#{address1_old},
+			</if>
+			<if test=" address2!='' and address2!=null">
+				address2=#{address2}
+			</if>
+			<if test=" member_deleted!='' and member_deleted!=null">
+				<if test="member_deleted=='true'">
+					member_deleted=1,
+				</if>
+				<if test="member_deleted=='false'">
+					member_deleted=0,
+				</if>
+			</if>
+		</set>
+		where
+		member_id=#{member_id}
+	</update>
+
+
+
+
+
+</mapper>

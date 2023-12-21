@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="mapper.mypage">
+	<!-- 리절트 맵 정의 -->
+	<resultMap id="orderGoodsResult" type="orderVO">
+		<result property="order_id" column="order_id" />
+		<result property="member_id" column="member_id" />
+		<result property="goods_id" column="goods_id" />
+		<result property="goods_name" column="goods_name" />
+		<result property="goods_sell_price" column="goods_sell_price" />
+		<result property="final_total_price" column="final_total_price" />
+		<result property="order_goods_qty" column="order_goods_qty" />
+
+		<result property="orderer_name" column="orderer_name" />
+		<result property="receiver_name" column="receiver_name" />
+		<result property="receiver_phone" column="receiver_phone" />
+
+		<result property="delivery_address" column="delivery_address" />
+		<result property="delivery_message" column="delivery_message" />
+
+		<result property="delivery_method" column="delivery_method" />
+		<result property="gift_wrapping" column="gift_wrapping" />
+		<result property="pay_method" column="pay_method" />
+		<result property="card_com_name" column="card_com_name" />
+		<result property="card_pay_month" column="card_pay_month" />
+
+		<result property="pay_orderer_phone_num"
+			column="pay_orderer_phone_num" />
+		<result property="pay_order_time" column="pay_order_time" />
+		<result property="delivery_state" column="delivery_state" />
+		<result property="final_total_price" column="final_total_price" />
+		<result property="goods_qty" column="goods_qty" />
+
+		<result property="goods_image_fileName" column="goods_image_fileName" />
+	</resultMap>
+
+
+	<select id="selectMyOrderGoodsList" resultMap="orderGoodsResult"
+		parameterType="String">
+	    <![CDATA[
+			select * from cat_order_tbl
+            where member_id=#{member_id}
+            order by pay_order_time desc
+		]]>
+	</select>
+
+
+	<select id="selectMyOrderInfo" resultMap="orderGoodsResult"
+		parameterType="String">
+	    <![CDATA[
+		    select * from cat_order_tbl
+            where order_id=#{order_id}
+    	]]>
+	</select>
+	<select id="selectMyOrderHistoryList"
+		resultMap="orderGoodsResult" parameterType="java.util.Map">
+	    <![CDATA[
+		  select * from cat_order_tbl
+          where member_id=#{member_id}
+          and  to_char(pay_order_time,'yyyy-mm-dd')  between #{beginDate} and #{endDate}
+          order by pay_order_time desc
+    	]]>
+	</select>
+
+	<update id="updateMyInfo" parameterType="java.util.HashMap">
+		update cat_member_tbl
+		<set>
+			<if test=" member_pw!='' and member_pw!=null">
+				member_pw=#{member_pw},
+			</if>
+			<if test=" member_gender!='' and member_gender!=null">
+				member_gender=#{member_gender},
+			</if>
+			<if test=" birth_year!='' and birth_year!=null">
+				birth_year=#{birth_year},
+			</if>
+			<if test="birth_month!='' and birth_month!=null">
+				birth_month=#{birth_month},
+			</if>
+			<if test=" birth_day!='' and birth_day!=null">
+				birth_day=#{birth_day},
+			</if>
+			<if test=" phone!='' and phone!=null">
+				phone=#{phone},
+			</if>
+
+			
+			<if test=" sms_valid_check!='' and sms_valid_check!=null">
+				<if test="sms_valid_check=='true'">
+					sms_valid_check=1,
+				</if>
+				<if test="sms_valid_check=='false'">
+					sms_valid_check=0,
+				</if>
+			</if>
+			
+			<if test=" member_email1!='' and member_email1!=null">
+				member_email1=#{member_email1},
+			</if>
+			<if test=" member_email2!='' and member_email2!=null">
+				member_email2=#{member_email2},
+			</if>
+			
+
+			<if test=" email_valid_check!='' and email_valid_check!=null">
+				<if test="email_valid_check=='true'">
+					email_valid_check=1,
+				</if>
+				<if test="email_valid_check=='false'">
+					email_valid_check=0,
+				</if>
+			</if>
+			
+			<if test=" birth_day_yinyang!='' and birth_day_yinyang!=null">
+				birth_day_yinyang=#{birth_day_yinyang},
+			</if>
+
+
+			<if test=" postcode!='' and postcode!=null">
+				postcode=#{postcode},
+			</if>
+			<if test=" address1_new!='' and address1_new!=null">
+				address1_new=#{address1_new},
+			</if>
+			<if test=" address1_old!='' and address1_old!=null">
+				address1_old=#{address1_old},
+			</if>
+			<if test=" address2!='' and address2!=null">
+				address2=#{address2}
+			</if>
+
+			<if test=" member_deleted!='' and member_deleted!=null">
+				<if test="member_deleted=='true'">
+					member_deleted=1,
+				</if>
+				<if test="member_deleted=='false'">
+					member_deleted=0,
+				</if>
+			</if>
+
+
+
+
+		</set>
+		where
+		member_id=#{member_id}
+	</update>
+
+	<select id="selectMyDetailInfo" resultType="memberVO"
+		parameterType="String">
+	    <![CDATA[
+			select * from cat_member_tbl 
+			where member_id=#{member_id}
+    	]]>
+	</select>
+
+	<update id="updateMyOrderCancel" parameterType="String">
+		update cat_order_tbl
+		set delivery_state='cancel_order'
+		where order_id=#{order_id}
+	</update>
+
+
+</mapper>

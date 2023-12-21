@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="mapper.member">
+	<!-- 리절트 맵 정의 -->
+	<resultMap id="memberResult" type="MemberVO">
+		<result property="member_id" column="member_id" />
+		<result property="member_pw" column="member_pw" />
+		<result property="member_name" column="member_name" />
+		<result property="member_gender" column="member_gender" />
+
+		<result property="phone" column="phone" />
+		<result property="sms_valid_check" column="sms_valid_check" />
+
+		<result property="member_email1" column="member_email1" />
+		<result property="member_email2" column="member_email2" />
+		<result property="email_valid_check" column="email_valid_check" />
+
+		<result property="postcode" column="postcode" />
+
+		<result property="address1_new" column="address1_new" />
+		<result property="address1_old" column="address1_old" />
+		<result property="address2" column="address2" />
+
+		<result property="birth_year" column="birth_year" />
+		<result property="birth_month" column="birth_month" />
+		<result property="birth_day" column="birth_day" />
+		<result property="birth_day_yinyang" column="birth_day_yinyang" />
+
+		<result property="member_add_date" column="member_add_date" />
+		<result property="member_deleted" column="member_deleted" />
+
+
+	</resultMap>
+
+	<select id="login" resultType="memberVO"
+		parameterType="java.util.Map">
+	    <![CDATA[
+			select * from cat_member_tbl 
+			 where member_id=#{member_id}
+			 and member_pw=#{member_pw}			
+			 
+		]]>
+	</select>
+
+	<select id="selectOverlappedID" parameterType="String"
+		resultType="String">
+
+		select decode(count(*),1, 'true', 0, 'false') from
+		cat_member_tbl
+		where member_id = #{id}
+
+
+	</select>
+
+	<insert id="insertNewMember" parameterType="memberVO">
+     <![CDATA[ 
+        insert into cat_member_tbl(member_id,
+                                      member_pw,
+                                      member_name,
+                                      member_gender,
+                                      phone,
+                                      sms_valid_check,
+                                      member_email1,
+                                      member_email2,
+                                      email_valid_check,
+                                      postcode,
+                                      address1_new,
+                                      address1_old,
+                                      address2,
+                                      birth_year,
+                                      birth_month,
+                                      birth_day,
+                                      birth_day_yinyang,
+                                      member_deleted)
+        values(#{member_id},
+               #{member_pw},
+               #{member_name},
+               #{member_gender},
+               #{phone},
+               #{sms_valid_check, jdbcType=INTEGER},
+               #{member_email1},
+               #{member_email2},
+               #{email_valid_check, jdbcType=INTEGER},
+               #{postcode},
+               #{address1_new},
+               #{address1_old},
+               #{address2},
+               #{birth_year},
+               #{birth_month},
+               #{birth_day},
+               #{birth_day_yinyang, jdbcType=INTEGER},
+               #{member_deleted, jdbcType=INTEGER})
+   ]]>
+	</insert>
+
+</mapper>
